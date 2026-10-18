@@ -31,7 +31,7 @@ Il file [devcontainer.json](../../.devcontainer/devcontainer.json) definisce:
 | Impostazione | Valore nel repository |
 |---|---|
 | Immagine | Ambiente PHP 8.3 basato su Debian Bookworm |
-| Strumenti aggiuntivi | Feature MySQL 8 e estensioni VS Code per PHP |
+| Strumenti aggiuntivi | Driver e client MySQL, servizio MySQL 8.4 tramite Docker Compose ed estensioni VS Code per PHP |
 | Porte inoltrate | 8000 per PHP e 3306 per il database |
 | Cartella pubblica | `www` nel workspace |
 | Avvio del server | `postStartCommand` |

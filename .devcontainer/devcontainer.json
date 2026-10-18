@@ -1,11 +1,9 @@
 {
   "name": "PHP 8.3 Backend",
-  "image": "mcr.microsoft.com/devcontainers/php:1-8.3-bookworm",
-  "features": {
-    "ghcr.io/devcontainers/features/mysql:1": {
-      "version": "8.0"
-    }
-  },
+  "dockerComposeFile": "compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/php-course",
+  "shutdownAction": "stopCompose",
   "customizations": {
     "vscode": {
       "extensions": [
