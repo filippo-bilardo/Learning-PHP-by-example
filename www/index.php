@@ -46,10 +46,20 @@
         <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/02-Ambiente_di_sviluppo/08-altre_soluzioni_online.md">Altre soluzioni di sviluppo online</a></li>
     </ul>
 
+    <h3>03 — Sintassi e costrutti di base</h3>
+    <ul>
+        <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/03-Sintassi_e_costrutti_di_base/README.md">Presentazione e indice del capitolo</a></li>
+        <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/03-Sintassi_e_costrutti_di_base/01_Variabili_TipiDati/README.md">Variabili e tipi di dati</a></li>
+        <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/03-Sintassi_e_costrutti_di_base/02_Operatori/README.md">Operatori</a></li>
+        <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/03-Sintassi_e_costrutti_di_base/03_Strutture_Condizionali/README.md">Strutture condizionali</a></li>
+        <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/03-Sintassi_e_costrutti_di_base/04_Cicli_Iterazioni/README.md">Cicli e iterazioni</a></li>
+    </ul>
+
     <h2>Esempi da eseguire</h2>
     <ol>
         <li><a href="01-hello-php/">Hello PHP</a>: un saluto generato con <code>echo</code> e le informazioni di <code>phpinfo()</code>.</li>
         <li><a href="02-pagina-riservata/">Pagina riservata</a>: un form di login e una sessione PHP.</li>
+        <li><a href="03-sintassi-e-costrutti-di-base/">Sintassi e costrutti di base</a>: 21 esempi PHP con codice e risultato.</li>
     </ol>
 </body>
 </html>

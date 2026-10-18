@@ -76,4 +76,4 @@ incontrato e il controllo che ti ha permesso di risolverlo.
 
 ---
 
-[Capitolo precedente: Introduzione a PHP](../01-Introduzione/README.md) · [Indice del corso](../README.md) · [Inizia dalla guida 01](01-componenti_e_strumenti.md)
+[Capitolo precedente: Introduzione a PHP](../01-Introduzione/README.md) · [Indice del corso](../README.md) · [Inizia dalla guida 01](01-componenti_e_strumenti.md) · [Capitolo successivo: Sintassi e costrutti di base](../03-Sintassi_e_costrutti_di_base/README.md)

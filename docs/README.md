@@ -21,6 +21,7 @@ specifiche vengono utilizzati nelle attività che li richiedono.
 
 1. [Introduzione a PHP](01-Introduzione/README.md): linguaggio, modello client-server, HTTP, pagine statiche e dinamiche, sviluppo server-side.
 2. [Ambiente di sviluppo](02-Ambiente_di_sviluppo/README.md): Web4Student, php.ini, Apache, Nginx, XAMPP, GitHub Codespaces e altre soluzioni online.
+3. [Sintassi e costrutti di base](03-Sintassi_e_costrutti_di_base/README.md): variabili, tipi, operatori, strutture condizionali e cicli, con guide, esempi ed esercizi.
 
 ## Programma dei capitoli successivi
 
@@ -29,7 +30,6 @@ collegate all'indice quando saranno disponibili.
 
 ### Fondamenti
 
-- Linguaggio e flusso di controllo
 - Funzioni, file e date
 - Programmazione a oggetti
 - Composer e autoloading

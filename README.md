@@ -5,6 +5,7 @@ dalla programmazione a oggetti fino ad API, database, sicurezza e deployment.
 
 - [Corso PHP](docs/README.md)
 - [Capitolo 2: Ambiente di sviluppo](docs/02-Ambiente_di_sviluppo/README.md)
+- [Capitolo 3: Sintassi e costrutti di base](docs/03-Sintassi_e_costrutti_di_base/README.md)
 - [Ambiente Codespaces](.devcontainer/README.md)
 
 Gli esempi e la pagina iniziale sono in `www`. In Codespaces il server parte
