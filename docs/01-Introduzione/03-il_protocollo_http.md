@@ -1,33 +1,3 @@
----
-marp: true
-title: Il protocollo HTTP
-description: Sezione del corso PHP dedicata al funzionamento del protocollo HTTP
-paginate: true
-size: 16:9
-theme: default
-style: |
-  section {
-    font-family: Aptos, Arial, sans-serif;
-    background: #071428;
-    color: #f8fafc;
-    padding: 52px 64px;
-  }
-  h1 { color: #ffffff; font-size: 40px; }
-  h2 { color: #a78bfa; }
-  strong { color: #60a5fa; }
-  code { background: #10243d; color: #d8e7ff; }
-  pre { background: #09111f; border: 1px solid #344a68; }
-  table { font-size: 19px; }
-  th { background: #253a64; color: #ffffff; }
-  td { background: #10243d; color: #d5deeb; }
-  blockquote {
-    border-left: 6px solid #777bb4;
-    background: #152c49;
-    color: #ffffff;
-    padding: 12px 20px;
-  }
----
-
 # Il protocollo HTTP
 
 **HTTP**, Hypertext Transfer Protocol, è il protocollo applicativo usato per trasferire risorse sul Web.
@@ -407,3 +377,6 @@ Risposte per il docente:
 4. application/json
 5. 201 Created
 -->
+
+---
+[Guida precedente](./02-modello_client_server_multilivello.md) | [Indice](./README.md) | [Guida successiva](./04-pagine_web_statiche_e_dinamiche.md)

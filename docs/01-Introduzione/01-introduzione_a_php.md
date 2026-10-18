@@ -1,33 +1,3 @@
----
-marp: true
-title: Introduzione a PHP
-description: Sezione introduttiva del corso PHP
-paginate: true
-size: 16:9
-theme: default
-style: |
-  section {
-    font-family: Aptos, Arial, sans-serif;
-    background: #071428;
-    color: #f8fafc;
-    padding: 52px 64px;
-  }
-  h1 { color: #ffffff; font-size: 40px; }
-  h2 { color: #a78bfa; }
-  strong { color: #60a5fa; }
-  code { background: #10243d; color: #d8e7ff; }
-  pre { background: #09111f; border: 1px solid #344a68; }
-  table { font-size: 20px; }
-  th { background: #253a64; color: #ffffff; }
-  td { background: #10243d; color: #d5deeb; }
-  blockquote {
-    border-left: 6px solid #777bb4;
-    background: #152c49;
-    color: #ffffff;
-    padding: 12px 20px;
-  }
----
-
 # Introduzione a PHP
 
 **PHP**, PHP: Hypertext Preprocessor, è un linguaggio di scripting progettato soprattutto per lo sviluppo web lato server.
@@ -413,3 +383,6 @@ Perché il browser non può visualizzare il codice PHP originale usando il coman
 Risposta per il docente:
 Il server esegue il codice PHP prima di inviare la risposta. Il browser riceve soltanto l'output generato, per esempio HTML o JSON.
 -->
+
+---
+ [Indice](./README.md) | [Guida successiva](./02-modello_client_server_multilivello.md)

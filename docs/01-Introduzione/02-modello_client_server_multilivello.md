@@ -1,33 +1,3 @@
----
-marp: true
-title: Modello client-server a più livelli
-description: Sezione del corso PHP dedicata alle architetture web a più livelli
-paginate: true
-size: 16:9
-theme: default
-style: |
-  section {
-    font-family: Aptos, Arial, sans-serif;
-    background: #071428;
-    color: #f8fafc;
-    padding: 52px 64px;
-  }
-  h1 { color: #ffffff; font-size: 40px; }
-  h2 { color: #a78bfa; }
-  strong { color: #60a5fa; }
-  code { background: #10243d; color: #d8e7ff; }
-  pre { background: #09111f; border: 1px solid #344a68; }
-  table { font-size: 20px; }
-  th { background: #253a64; color: #ffffff; }
-  td { background: #10243d; color: #d5deeb; }
-  blockquote {
-    border-left: 6px solid #777bb4;
-    background: #152c49;
-    color: #ffffff;
-    padding: 12px 20px;
-  }
----
-
 # Il modello client-server
 
 Il modello client-server organizza la comunicazione tra due componenti software:
@@ -227,3 +197,7 @@ Apache, PHP e MariaDB sono installati sullo stesso computer. L'applicazione può
 Risposta per il docente:
 Sì. I livelli sono distinti in base alle responsabilità architetturali e non devono essere eseguiti su computer differenti.
 -->
+
+---
+---
+[Guida precedente](./01-introduzione_a_php.md) | [Indice](./README.md) | [Guida successiva](./03-il_protocollo_http.md)

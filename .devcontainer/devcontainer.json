@@ -32,5 +32,6 @@
     }
   },
   "postCreateCommand": "if [ -f composer.json ]; then composer install --no-interaction; fi",
+  "postStartCommand": "nohup php -S 0.0.0.0:8000 -t \"${containerWorkspaceFolder}/www\" > /tmp/php-course-server.log 2>&1 < /dev/null &",
   "remoteUser": "vscode"
 }
