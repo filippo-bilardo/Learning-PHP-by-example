@@ -128,6 +128,9 @@ senza considerare l'ambiente un hosting permanente.
 
 ## Attività
 
+Segui l'[esercizio guidato GitHub Codespaces](esercizi/03_GitHub_Codespaces.md)
+per applicare questi concetti al repository personale con l'intera cartella `www`.
+
 Modifica il saluto, controllalo dalla porta 8000, registra la modifica con Git
 e verifica il risultato sul tuo repository. Spiega la differenza tra salvare,
 fare commit e fare push, e perché GitHub Pages non sostituisce questo ambiente.

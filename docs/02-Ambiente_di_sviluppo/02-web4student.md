@@ -122,6 +122,10 @@ laboratorio indicato dal docente.
 
 ## Attività
 
+Per svolgere la prima pubblicazione passo per passo, segui
+l'[esercizio guidato Hello World su Web4Student](esercizi/01_Hello_World_Web4Student.md).
+Prosegui poi con [Git e GitHub per l'intera cartella www](esercizi/02_Git_e_GitHub.md).
+
 1. Pubblica gli esempi e verifica il saluto, il login e il logout.
 2. Annota versione PHP CLI, versione PHP web e cartella pubblica.
 3. Spiega perché `~/www/index.php` e l'URL del sito personale sono riferimenti diversi.

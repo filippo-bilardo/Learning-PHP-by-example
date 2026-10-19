@@ -44,6 +44,7 @@
         <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/02-Ambiente_di_sviluppo/06-ambiente_locale_con_xampp.md">Ambiente locale con XAMPP</a></li>
         <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/02-Ambiente_di_sviluppo/07-sviluppo_online_con_github_e_codespaces.md">Sviluppo online con GitHub e Codespaces</a></li>
         <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/02-Ambiente_di_sviluppo/08-altre_soluzioni_online.md">Altre soluzioni di sviluppo online</a></li>
+        <li><a href="https://github.com/filippo-bilardo/Learning-PHP-by-example/blob/main/docs/02-Ambiente_di_sviluppo/esercizi/README.md">Esercizi guidati: Web4Student, Git e GitHub, Codespaces</a></li>
     </ul>
 
     <h3>03 — Sintassi e costrutti di base</h3>

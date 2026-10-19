@@ -27,6 +27,14 @@ corso, la cui cartella pubblica è sempre `www`.
 | [07 — Sviluppo online con GitHub e Codespaces](07-sviluppo_online_con_github_e_codespaces.md) | Repository, dev container, porta 8000 e salvataggio del lavoro |
 | [08 — Altre soluzioni di sviluppo online](08-altre_soluzioni_online.md) | Ambienti remoti, piattaforme gestite dalla scuola e playground PHP |
 
+## Esercizi guidati
+
+Il [percorso pratico](esercizi/README.md) usa lo stesso sito nelle tre attività:
+
+1. [Hello World su Web4Student](esercizi/01_Hello_World_Web4Student.md): crea una pagina PHP e aprila dal tuo URL personale.
+2. [Git e GitHub per l'intera cartella www](esercizi/02_Git_e_GitHub.md): conserva tutto il sito in un repository personale e pubblicane gli aggiornamenti.
+3. [Sviluppare con GitHub Codespaces](esercizi/03_GitHub_Codespaces.md): esegui il repository online, modifica la pagina e sincronizza il lavoro con Web4Student.
+
 ## Prerequisiti
 
 Aver letto il [capitolo introduttivo](../01-Introduzione/README.md), conoscere il
