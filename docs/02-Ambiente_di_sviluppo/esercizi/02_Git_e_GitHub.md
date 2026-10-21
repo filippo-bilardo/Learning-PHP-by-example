@@ -145,12 +145,50 @@ non sono credenziali di accesso.
 
 ## Passo 4 — Preparare l'autenticazione SSH verso GitHub
 
+### Perché creare una chiave SSH?
+
+Quando esegui `git push`, GitHub deve riconoscere il tuo account e verificare
+che possa scrivere nel repository. Il nome e l'email configurati nel passo 3
+identificano l'autore dei commit, ma **non permettono di accedere a GitHub**.
+
+La chiave SSH serve ad autenticare la connessione tra Web4Student e GitHub.
+Dopo la configurazione puoi usare comandi come `git push` e `git pull` con
+l'URL SSH del repository, senza inserire ogni volta le credenziali GitHub.
+`git commit`, invece, registra una versione locale e non richiede una connessione
+a GitHub. Riferimento: [autenticazione SSH su GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/about-ssh).
+
+### Una coppia di chiavi con due compiti diversi
+
+`ssh-keygen` crea due file collegati tra loro:
+
+| File | Dove rimane | A cosa serve |
+|---|---|---|
+| `w4s_github_ed25519` — chiave privata | Nella tua cartella `~/.ssh` su Web4Student | Permette al client SSH di dimostrare il possesso della chiave |
+| `w4s_github_ed25519.pub` — chiave pubblica | Viene copiata nelle impostazioni del tuo account GitHub | Permette a GitHub di verificare l'autenticazione e associarla al tuo account |
+
+La chiave privata non va incollata su GitHub né aggiunta al repository.
+Registrare quella pubblica non concede nuovi permessi: puoi fare push soltanto
+nei repository su cui il tuo account ha già il diritto di scrittura.
+
+### Perché la chiave viene creata su Web4Student?
+
+In questo esercizio i comandi Git vengono eseguiti sul server Web4Student:
+è quindi quel server a dover presentare la tua chiave a GitHub. Una chiave
+presente soltanto sul tuo computer non viene automaticamente usata dalla
+sessione remota.
+
 Le connessioni sono distinte:
 
 | Collegamento | Account e porta |
 |---|---|
 | Computer → Web4Student | `username`, porta 2222 |
 | Web4Student → GitHub | Utente SSH `git`, normalmente porta 22 |
+
+Il primo accesso ti porta nel tuo account Web4Student; il secondo ti identifica
+su GitHub tramite la chiave. Nell'indirizzo `git@github.com` l'utente SSH è
+`git`: il tuo account GitHub viene riconosciuto dalla chiave registrata.
+
+### Generare la coppia di chiavi
 
 La cartella `~/.ssh` esiste già. Controlla le chiavi presenti:
 
@@ -163,11 +201,19 @@ Se non hai già una chiave adatta a GitHub e il nome scelto è libero, creala:
 ```bash
 ssh-keygen -t ed25519 -C "tua.email@example.com" -f ~/.ssh/w4s_github_ed25519 -N ""
 ```
-    • -t ed25519: Specifica l'algoritmo di crittografia. Ed25519 è lo standard moderno raccomandato perché è più sicuro e veloce rispetto al vecchio RSA.
-    • -C "tua.email@example.com": Aggiunge un commento alla chiave (in genere l'email). Serve solo come etichetta per aiutarti a identificare la chiave quando la visualizzi su GitHub.
-    • -f ~/.ssh/w4s_github_ed25519: Specifica il percorso e il nome del file in cui salvare la chiave privata. In questo modo non sovrascrive la chiave di default (id_ed25519). Creerà anche un file .pub per la chiave pubblica.
-    • -N "": Imposta una passphrase vuota (nessuna password). L'argomento vuoto dopo -N indica a ssh-keygen di non richiedere una password, permettendo al comando di eseguirsi in modo non interattivo (senza bloccare il terminale in attesa di un input utente).
 
+| Opzione | Significato |
+|---|---|
+| `-t ed25519` | Sceglie l'algoritmo della coppia di chiavi |
+| `-C "tua.email@example.com"` | Aggiunge un'etichetta per riconoscere la chiave; non esegue l'accesso con quell'email |
+| `-f ~/.ssh/w4s_github_ed25519` | Sceglie il nome della chiave privata; la pubblica avrà lo stesso nome seguito da `.pub` |
+| `-N ""` | Imposta una passphrase vuota, come previsto per il collegamento automatico di questo esercizio |
+
+Non sovrascrivere una chiave già utilizzata. La
+[guida GitHub alla generazione delle chiavi](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+approfondisce coppia di chiavi, nomi dei file e passphrase.
+
+### Registrare la chiave pubblica su GitHub
 
 Visualizza la chiave pubblica:
 
@@ -179,12 +225,14 @@ Il file con estensione **`.pub`** contiene la chiave pubblica da registrare su
 GitHub. La chiave privata resta nel tuo ambiente.
 
 **Copia l'intera chiave pubblica** (inizia con `ssh-ed25519...`) e aggiungila su GitHub:
+
 1. Vai su https://github.com/settings/keys
 2. Clicca su "New SSH key"
 3. Dai un titolo (es: "Web4Student user")
 4. Incolla la chiave nel campo "Key"
 5. Clicca "Add SSH key"
 
+### Indicare a SSH quale chiave usare
 
 Nel terminale remoto apri `nano ~/.ssh/config` e inserisci questo blocco;
 se esiste già un blocco per GitHub, integra quello esistente:
@@ -213,6 +261,8 @@ spiegato nella [guida al test SSH](https://docs.github.com/en/authentication/con
 
 SSH userà direttamente la chiave indicata da `IdentityFile`, senza chiedere
 una passphrase e senza richiedere l'avvio di `ssh-agent` a ogni sessione.
+Qui “automatico” riguarda l'autenticazione: per inviare le modifiche dovrai
+comunque creare i commit ed eseguire `git push`.
 
 ## Passo 5 — Documentare il progetto e scegliere i file da tracciare
 
