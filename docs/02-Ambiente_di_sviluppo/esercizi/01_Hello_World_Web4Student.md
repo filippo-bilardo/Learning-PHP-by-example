@@ -48,7 +48,7 @@ ls -la
 ```
 
 Il primo `pwd` mostra la posizione iniziale; il secondo deve terminare con
-`www/01-hello-world`. `~` indica la home del tuo account: non devi sostituirlo
+`www/es01a-hello-world`. `~` indica la home del tuo account: non devi sostituirlo
 con il nome della cartella del corso sul computer locale.
 
 Se in questa sottocartella esiste già un `index.php`, leggilo prima di modificarlo

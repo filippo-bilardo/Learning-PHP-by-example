@@ -1,10 +1,10 @@
-# Esercizio 03: sviluppare il sito con GitHub Codespaces
+# Esercizio c: sviluppare il sito con GitHub Codespaces
 
 ## Obiettivo
 
 Aprire in Codespaces il repository personale creato nell'esercizio precedente,
-eseguire la sua cartella `www`, modificare Hello World e riportare il risultato
-su GitHub e Web4Student.
+avviare il server web e creare la pagina `es01c-hello-world/index.php`,
+quindi riportare il risultato su GitHub e Web4Student.
 
 Riferimento teorico:
 [Sviluppo online con GitHub e Codespaces](../07-sviluppo_online_con_github_e_codespaces.md).
@@ -16,18 +16,33 @@ che usa Docker Compose e un servizio MySQL. Qui lavoriamo sul tuo repository
 ## Prerequisiti
 
 - Aver completato [Git e GitHub per l'intera www](02_Git_e_GitHub.md).
-- Avere il repository personale su GitHub con `www/01-hello-world/index.php`.
+- Avere il repository personale su GitHub con `es01a-hello-world/index.php` ed `es01b-hello-world/index.php` alla radice.
 - Poter creare un Codespace con il proprio account o con l'organizzazione del corso.
 
 Non creare un altro repository per il singolo Hello World: prosegui con quello
 che contiene l'intero sito.
 
+## Come corrispondono i percorsi
+
+`~/www` è la cartella pubblica sul server Web4Student ed è anche la radice
+del suo repository Git. Su GitHub sono presenti direttamente i suoi file
+e le sue sottocartelle: non c'è un ulteriore livello `www`.
+
+| Ambiente | Percorso della pagina dell'esercizio b |
+|---|---|
+| Web4Student | `~/www/es01b-hello-world/index.php` |
+| Repository GitHub | `es01b-hello-world/index.php` |
+| Codespace | `es01b-hello-world/index.php`, dalla radice del workspace |
+
+In Codespaces la cartella pubblica sarà quindi la **radice del repository**,
+non una sottocartella `www`.
+
 ## Passo 1 — Aggiungere la configurazione PHP al progetto
 
-**Dove:** terminale SSH su Web4Student, nella copia di lavoro dell'esercizio 02.
+**Dove:** terminale SSH su Web4Student, dentro `~/www`, come nell'esercizio b.
 
 ```bash
-cd ~/progetti/sito-php-studente
+cd ~/www
 git status
 mkdir -p .devcontainer
 nano .devcontainer/devcontainer.json
@@ -48,12 +63,12 @@ Per il nuovo progetto di questa esercitazione inserisci:
       "onAutoForward": "openBrowser"
     }
   },
-  "postStartCommand": "nohup php -S 0.0.0.0:8000 -t \"${containerWorkspaceFolder}/www\" > /tmp/php-course-server.log 2>&1 < /dev/null &",
+  "postStartCommand": "nohup php -S 0.0.0.0:8000 -t \"${containerWorkspaceFolder}\" > /tmp/php-course-server.log 2>&1 < /dev/null &",
   "remoteUser": "vscode"
 }
 ```
 
-La struttura ora comprende:
+La struttura versionata ora comprende:
 
 ```text
 sito-php-studente/
@@ -61,17 +76,18 @@ sito-php-studente/
 │   └── devcontainer.json
 ├── .gitignore
 ├── README.md
-└── www/
-    └── 01-hello-world/
-        └── index.php
+├── es01a-hello-world/
+│   └── index.php
+└── es01b-hello-world/
+    └── index.php
 ```
 
 | Impostazione | Significato |
 |---|---|
 | `image` | Ambiente con PHP 8.3 |
 | `forwardPorts` | Porta da rendere raggiungibile tramite l'inoltro Codespaces |
-| `postStartCommand` | Avvia il server PHP usando `www` come cartella pubblica |
-| `${containerWorkspaceFolder}` | Percorso del repository nel container, sostituito da Dev Containers |
+| `postStartCommand` | Avvia il server PHP usando la radice del workspace come cartella pubblica |
+| `${containerWorkspaceFolder}` | Percorso del repository nel container, sostituito da Dev Containers; contiene già i file del sito |
 | `/tmp/php-course-server.log` | Log del server avviato automaticamente |
 
 Per le opzioni generali consulta la [configurazione PHP per Codespaces](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-php-project-for-codespaces).
@@ -89,7 +105,8 @@ git push
 ```
 
 **Verifica nel browser GitHub:** sul ramo `main` compare il file
-`.devcontainer/devcontainer.json` accanto alla cartella `www`.
+`.devcontainer/devcontainer.json` accanto alle cartelle `es01a-hello-world`
+ed `es01b-hello-world`.
 La configurazione deve arrivare nel repository prima di creare il Codespace.
 
 ## Passo 3 — Creare il Codespace
@@ -106,7 +123,9 @@ Se hai già un Codespace precedente alla configurazione, esegui
 La [guida introduttiva ufficiale](https://docs.github.com/en/codespaces/quickstart)
 mostra il flusso di creazione.
 
-**Verifica:** nell'esplora file vedi `.devcontainer`, `README.md` e tutta `www`.
+**Verifica:** nell'esplora file vedi `.devcontainer`, `README.md`,
+`es01a-hello-world`, `es01b-hello-world` e gli altri file del sito direttamente
+nella radice del repository.
 Il terminale appartiene ora al container remoto di Codespaces, non alla sessione
 SSH Web4Student e non al computer locale.
 
@@ -118,23 +137,23 @@ SSH Web4Student e non al computer locale.
 pwd
 php --version
 php --ini
-php -l www/01-hello-world/index.php
+php -l es01b-hello-world/index.php
 git status
 ```
 
 Controlla che la versione sia PHP 8.3, che il file venga trovato e che il
 controllo di sintassi non segnali errori. Il percorso del workspace viene
-scelto dall'ambiente: non usare `~/progetti/sito-php-studente` come se fossi
-ancora su Web4Student.
+scelto dall'ambiente: non usare `cd ~/www` come se fossi ancora su Web4Student
+e non creare un'altra cartella `www` nel Codespace.
 
-## Passo 5 — Aprire Hello World tramite la porta 8000
+## Passo 5 — Aprire la pagina dell'esercizio b tramite la porta 8000
 
 1. Apri il pannello **Ports** nell'editor.
 2. Individua la porta **8000**, etichettata **Sito PHP**.
 3. Usa **Open in Browser**.
-4. Aggiungi `/01-hello-world/` all'URL inoltrato, mantenendo il dominio assegnato dal tuo Codespace.
+4. Aggiungi `/es01b-hello-world/` all'URL inoltrato, mantenendo il dominio assegnato dal tuo Codespace.
 
-Il messaggio iniziale deve essere quello già salvato nell'esercizio 02:
+Il messaggio iniziale deve essere quello già salvato nell'esercizio b:
 **Hello World sotto controllo versione con Git.**
 
 Il server ascolta nel container; l'URL inoltrato lo rende raggiungibile dal
@@ -148,43 +167,83 @@ Se manca la porta, controlla il log:
 tail -n 30 /tmp/php-course-server.log
 ```
 
-Se il server non è già in esecuzione, puoi avviarlo dal terminale:
+Se il server non è già in esecuzione, puoi avviarlo dal terminale, dalla radice
+del repository:
 
 ```bash
-php -S 0.0.0.0:8000 -t www
+php -S 0.0.0.0:8000 -t .
 ```
 
 Se compare un errore di porta occupata, non avviare altre istanze: verifica
 il servizio partito automaticamente e l'indirizzo inoltrato nel pannello Ports.
-L'assenza di un `index.php` nella radice `www` non impedisce di aprire direttamente
-il percorso `/01-hello-world/`.
+L'opzione `-t .` indica la directory corrente. L'assenza di un `index.php`
+nella radice del repository non impedisce di aprire direttamente il percorso
+`/es01b-hello-world/`.
 
-## Passo 6 — Modificare il sito dal browser
+## Passo 6 — Creare es01c-hello-world/index.php nel Codespace
 
-Nell'editor del Codespace apri `www/01-hello-world/index.php` e imposta:
-
-```php
-$messaggio = 'Pagina aggiornata da GitHub Codespaces.';
-```
-
-Salva, controlla la sintassi e ricarica la pagina inoltrata:
+Nel terminale del Codespace, dalla radice del repository, crea la nuova cartella:
 
 ```bash
-php -l www/01-hello-world/index.php
-git diff -- www/01-hello-world/index.php
+mkdir -p es01c-hello-world
 ```
 
-**Verifica:** la pagina mostra il nuovo messaggio e il diff identifica la riga
-modificata. Il codice continua a essere eseguito sul server remoto.
+Nell'esplora file seleziona `es01c-hello-world`, usa **New File** e crea
+`index.php`. Oppure usa il comando code index.php dal terminale:
+
+```bash
+code es01c-hello-world/index.php
+```
+
+Inserisci questo codice, sostituendo `Mario` con il tuo nome:
+
+```php
+<?php
+declare(strict_types=1);
+
+$nome = 'Mario';
+$messaggio = 'Hello World creato con GitHub Codespaces.';
+?>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Esercizio c — Hello World</title>
+</head>
+<body>
+    <h1><?php echo 'Hello, World!'; ?></h1>
+    <p>Studente: <?= $nome ?></p>
+    <p><?= $messaggio ?></p>
+</body>
+</html>
+```
+
+Salva e controlla la sintassi e lo stato del nuovo file:
+
+```bash
+php -l es01c-hello-world/index.php
+git status --short -- es01c-hello-world/
+```
+
+Git deve segnalare la nuova cartella come non ancora tracciata. Per vedere il
+contenuto nel diff, la aggiungerai all'area di staging nel passo successivo.
+
+Apri `/es01c-hello-world/` sullo stesso dominio inoltrato dalla porta 8000.
+Non aggiungere `/www/` al percorso.
+
+**Verifica:** compaiono **Hello, World!**, il tuo nome e il messaggio
+**Hello World creato con GitHub Codespaces.** Il codice viene eseguito nel
+container remoto; le pagine degli esercizi a e b restano disponibili nei loro percorsi.
 
 ## Passo 7 — Fare commit e push dal Codespace
 
 Dal terminale del Codespace:
 
 ```bash
-git add -- www/01-hello-world/index.php
+git add -- es01c-hello-world/index.php
 git diff --cached
-git commit -m "Aggiorna Hello World da Codespaces"
+git commit -m "Crea es01c-hello-world da Codespaces"
 git push
 git status
 git log --oneline -3
@@ -196,37 +255,39 @@ Git, imposta `git config user.name "Nome Cognome"` e
 il commit. Non occorre copiare la chiave privata Web4Student nel Codespace.
 
 **Nel browser GitHub:** apri il repository, controlla l'ultimo commit e verifica
-il nuovo messaggio nel file. Salvare nell'editor, fare commit e fare push sono
-tre passaggi distinti.
+che `es01c-hello-world/index.php` sia presente alla radice accanto alle cartelle
+degli esercizi a e b. Salvare nell'editor, fare commit e fare push sono tre
+passaggi distinti.
 
-## Passo 8 — Riportare la modifica su Web4Student
+## Passo 8 — Portare la nuova pagina su Web4Student
 
 **Dove:** terminale SSH Web4Student, non terminale del Codespace.
 
 ```bash
-cd ~/progetti/sito-php-studente
+cd ~/www
 git status --short
 ```
 
 L'output deve essere vuoto. Se hai modifiche locali, completale e sincronizzale
-prima di procedere, evitando di sovrascriverle. Ricevi poi i commit e aggiorna
-la copia pubblicata:
+prima di procedere, evitando di sovrascriverle. Ricevi poi i commit:
 
 ```bash
 git pull --ff-only
-cp -a www/. ~/www/
+php -l es01c-hello-world/index.php
 ```
 
-Riapri `https://w4s.filippobilardo.it/~username/01-hello-world/`.
-Deve comparire **Pagina aggiornata da GitHub Codespaces.**, come nell'anteprima
-del Codespace. Il testo descrive la modifica al sorgente e può comparire anche
+Il pull crea `es01c-hello-world/index.php` direttamente in `~/www`, già pubblicata
+dal server. Non serve una copia aggiuntiva e non viene creata `~/www/www`.
+
+Apri `https://w4s.filippobilardo.it/~username/es01c-hello-world/`.
+Deve comparire **Hello World creato con GitHub Codespaces.**, come nell'anteprima
+del Codespace. Il testo descrive l'origine del codice e può comparire anche
 quando la pagina viene eseguita da Web4Student.
 
 ```mermaid
 flowchart LR
     C["Codice nel Codespace"] -->|"commit e push"| G["Repository GitHub"]
-    G -->|"pull"| P["Progetto Git su Web4Student"]
-    P -->|"copia del contenuto www"| W["Sito personale Web4Student"]
+    G -->|"pull in ~/www"| W["Sito personale Web4Student"]
 ```
 
 ## Passo 9 — Concludere la sessione
@@ -242,16 +303,16 @@ del tuo account e il [ciclo di vita Codespaces](https://docs.github.com/en/codes
 ## Consegna e autovalutazione
 
 Consegna URL del repository, identificativi del commit di configurazione e
-del commit da Codespaces, URL personale Web4Student e una breve descrizione
+del commit che crea `es01c-hello-world`, URL della nuova pagina su Web4Student e una breve descrizione
 della prova sulla porta 8000. Documenta l'anteprima con uno screenshot se
 richiesto dal docente, senza rendere pubblica la porta per la sola consegna.
 
 Rispondi:
 
-1. Perché `www` resta una sottocartella del repository?
+1. Perché sul server usi `~/www`, mentre nel Codespace avvii PHP con `-t .` dalla radice del repository?
 2. Che differenza c'è tra terminale del Codespace e terminale SSH Web4Student?
 3. Quale comando avvia il server e quale configurazione lo rende automatico?
-4. Perché il push da Codespaces non aggiorna da solo la pagina Web4Student?
+4. Perché dopo il push da Codespaces serve un pull dentro `~/www`, ma non una copia aggiuntiva dei file?
 5. Perché GitHub Pages non sostituisce il server PHP di questa attività?
 
 ---

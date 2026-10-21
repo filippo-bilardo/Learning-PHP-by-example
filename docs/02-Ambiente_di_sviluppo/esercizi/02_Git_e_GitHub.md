@@ -6,11 +6,6 @@ Creare un repository personale che contenga **l'intera cartella `www`**, con
 tutte le pagine, le sottocartelle e le risorse del proprio sito Web4Student.
 L'unità di lavoro è il sito completo, non soltanto il file Hello World.
 
-Il percorso riprende l'esercizio Git del corso JavaScript: configurazione,
-autenticazione SSH, primo commit, repository remoto e aggiornamenti successivi.
-Qui lo applichiamo a un sito PHP, preparando anche il successivo lavoro in
-Codespaces.
-
 ## Prerequisiti e risultato finale
 
 Completa [Hello World su Web4Student](01_Hello_World_Web4Student.md) e prepara
@@ -26,6 +21,8 @@ La struttura da ottenere è:
 ├── README.md
 ├── tmp/                    file temporanei, esclusi da Git
 ├── es01a-hello-world/
+│   └── index.php
+├── es01b-hello-world/
 │   └── index.php
 └── ... tutte le altre cartelle e risorse del proprio sito
 ```
@@ -56,7 +53,7 @@ Se l'ultimo comando elenca una `.git`, individua il repository esistente prima
 di procedere. Se `~/www` è già un repository, riutilizzalo; non creare repository
 annidati nelle cartelle dei singoli esercizi.
 
-## Passo 2 — Entrare nella cartella www e creare tmp
+## Passo 2 — Preparare tmp e la pagina es01b-hello-world
 
 Usa la cartella `www` già presente nel tuo account:
 
@@ -79,6 +76,56 @@ ls -ld tmp
 Useremo `tmp` per dati di prova che non devono essere versionati. Al passo 5
 creerai `.gitignore` per escluderne tutto il contenuto. Da ora lavora
 direttamente sui sorgenti in `~/www`.
+
+### Creare la pagina dell'esercizio b
+
+Sempre da `~/www`, crea la sottocartella e apri il nuovo file:
+
+```bash
+mkdir -p es01b-hello-world
+nano es01b-hello-world/index.php
+```
+
+Inserisci il codice seguente, sostituendo `Mario` con il tuo nome:
+
+```php
+<?php
+declare(strict_types=1);
+
+$nome = 'Mario';
+$messaggio = "Hello World dell'esercizio b.";
+?>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Esercizio b — Hello World</title>
+</head>
+<body>
+    <h1><?php echo 'Hello, World!'; ?></h1>
+    <p>Studente: <?= htmlspecialchars($nome, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></p>
+    <p><?= htmlspecialchars($messaggio, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></p>
+</body>
+</html>
+```
+
+Salva con `Ctrl+O`, conferma con `Invio` ed esci con `Ctrl+X`.
+Controlla la sintassi:
+
+```bash
+php -l es01b-hello-world/index.php
+```
+
+Apri nel browser il tuo URL personale:
+
+```text
+https://w4s.filippobilardo.it/~username/es01b-hello-world/
+```
+
+**Verifica:** compaiono **Hello, World!**, il tuo nome e il messaggio
+**Hello World dell'esercizio b.** La nuova pagina entrerà nel primo commit
+insieme a tutti gli altri sorgenti di `www`.
 
 ## Passo 3 — Configurare l'identità Git
 
@@ -116,9 +163,11 @@ Se non hai già una chiave adatta a GitHub e il nome scelto è libero, creala:
 ```bash
 ssh-keygen -t ed25519 -C "tua.email@example.com" -f ~/.ssh/w4s_github_ed25519 -N ""
 ```
+    • -t ed25519: Specifica l'algoritmo di crittografia. Ed25519 è lo standard moderno raccomandato perché è più sicuro e veloce rispetto al vecchio RSA.
+    • -C "tua.email@example.com": Aggiunge un commento alla chiave (in genere l'email). Serve solo come etichetta per aiutarti a identificare la chiave quando la visualizzi su GitHub.
+    • -f ~/.ssh/w4s_github_ed25519: Specifica il percorso e il nome del file in cui salvare la chiave privata. In questo modo non sovrascrive la chiave di default (id_ed25519). Creerà anche un file .pub per la chiave pubblica.
+    • -N "": Imposta una passphrase vuota (nessuna password). L'argomento vuoto dopo -N indica a ssh-keygen di non richiedere una password, permettendo al comando di eseguirsi in modo non interattivo (senza bloccare il terminale in attesa di un input utente).
 
-L'opzione `-N ""` crea la chiave **senza passphrase**, per consentire il
-collegamento automatico a GitHub. Non sovrascrivere una chiave già utilizzata.
 
 Visualizza la chiave pubblica:
 
@@ -128,11 +177,14 @@ cat ~/.ssh/w4s_github_ed25519.pub
 
 Il file con estensione **`.pub`** contiene la chiave pubblica da registrare su
 GitHub. La chiave privata resta nel tuo ambiente.
-Riferimento: [generazione della chiave SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
-**Nel browser GitHub:** apri **Settings → SSH and GPG keys → New SSH key**,
-scegli una chiave di autenticazione, assegna un titolo come `Web4Student` e
-incolla la chiave pubblica completa. Vedi la [procedura ufficiale](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+**Copia l'intera chiave pubblica** (inizia con `ssh-ed25519...`) e aggiungila su GitHub:
+1. Vai su https://github.com/settings/keys
+2. Clicca su "New SSH key"
+3. Dai un titolo (es: "Web4Student user")
+4. Incolla la chiave nel campo "Key"
+5. Clicca "Add SSH key"
+
 
 Nel terminale remoto apri `nano ~/.ssh/config` e inserisci questo blocco;
 se esiste già un blocco per GitHub, integra quello esistente:
@@ -180,6 +232,7 @@ Esercitazioni PHP di Nome Cognome, classe 3A.
 
 Questo repository contiene l'intero sito: pagine PHP, HTML, CSS e altre risorse.
 La prima attività è es01a-hello-world/index.php.
+La pagina dell'esercizio Git e GitHub è es01b-hello-world/index.php.
 
 Su Web4Student lavoro nella cartella personale ~/www, già pubblicata dal server.
 La sottocartella tmp contiene file temporanei e viene esclusa da Git.
@@ -226,13 +279,13 @@ esercizio:
 
 ```bash
 cd ~/www
-git init -b main
-git rev-parse --show-toplevel
-git check-ignore -v tmp/prova.txt
-git add .
-git status
-git diff --cached --stat
-git diff --cached
+git init -b main            # Inizializza il repository con branch main
+git rev-parse --show-toplevel       # mostra la radice del repository
+git check-ignore -v tmp/prova.txt   # verifica l'esclusione del file temporaneo
+git add .                   # aggiunge tutto tranne tmp
+git status                  # mostra i file preparati per il commit
+git diff --cached --stat    # mostra le modifiche preparate
+git diff --cached           # mostra il contenuto delle modifiche preparate
 ```
 
 **Verifica:** la radice termina con `/www`; `git check-ignore` indica la regola
@@ -278,8 +331,9 @@ git push -u origin main
 ```
 
 Aggiorna la pagina GitHub del repository. Devi vedere `README.md`, `.gitignore`
-e **tutto il contenuto versionato di `www`**, con `es01a-hello-world` direttamente
-alla radice. Apri `es01a-hello-world/index.php` e confrontalo con il tuo file.
+e **tutto il contenuto versionato di `www`**, con `es01a-hello-world` ed
+`es01b-hello-world` direttamente alla radice. Apri `es01b-hello-world/index.php`
+e confrontalo con il tuo file.
 La cartella `tmp` e i suoi file non devono comparire.
 
 `git push` invia i commit: non invia automaticamente modifiche non ancora
@@ -291,7 +345,7 @@ indipendentemente dal push.
 Modifica direttamente il file del sito, sempre da `~/www`:
 
 ```bash
-nano es01a-hello-world/index.php
+nano es01b-hello-world/index.php
 ```
 
 Cambia il valore del messaggio in:
@@ -303,8 +357,8 @@ $messaggio = 'Hello World sotto controllo versione con Git.';
 Poi controlla, registra e invia:
 
 ```bash
-php -l es01a-hello-world/index.php
-git diff -- es01a-hello-world/index.php
+php -l es01b-hello-world/index.php
+git diff -- es01b-hello-world/index.php
 git add .
 git commit -m "Aggiorna il messaggio di Hello World"
 git push
@@ -319,7 +373,7 @@ Il file modificato si trova già nella cartella pubblicata. Non devi copiarlo
 in un'altra directory. Riapri l'URL personale:
 
 ```text
-https://w4s.filippobilardo.it/~username/es01a-hello-world/
+https://w4s.filippobilardo.it/~username/es01b-hello-world/
 ```
 
 Ora deve comparire il nuovo messaggio.
@@ -354,7 +408,7 @@ le modifiche prima di integrare: non serve un push forzato per questo esercizio.
 
 ## Consegna e autovalutazione
 
-Consegna URL del repository, URL della pagina Web4Student e identificativi
+Consegna URL del repository, URL della pagina `es01b-hello-world` su Web4Student e identificativi
 dei due commit. Verifica che il repository comprenda anche gli altri file
 del sito presenti in `www`.
 
