@@ -1,4 +1,4 @@
-# Esercizio 02: Git e GitHub per l'intera cartella www
+# Esercizio b: Git e GitHub per l'intera cartella www
 
 ## Obiettivo
 
@@ -20,19 +20,19 @@ nel terminale **Web4Student**, salvo diversa indicazione.
 La struttura da ottenere è:
 
 ```text
-~/progetti/sito-php-studente/
+~/www/
 ├── .git/
 ├── .gitignore
 ├── README.md
-└── www/
-    ├── 01-hello-world/
-    │   └── index.php
-    └── ... tutte le altre cartelle e risorse del proprio sito
+├── tmp/                    file temporanei, esclusi da Git
+├── es01a-hello-world/
+│   └── index.php
+└── ... tutte le altre cartelle e risorse del proprio sito
 ```
 
-Questa directory di lavoro è esterna a `~/www`, che resta la copia pubblicata
-da Apache. In questo modo la cronologia `.git` non viene collocata nell'area web.
-Su GitHub la cartella `www` sarà visibile alla radice del repository.
+La cartella `~/www` esiste già ed è sia la directory di lavoro sia l'area
+pubblicata da Web4Student. Il repository viene inizializzato direttamente qui:
+su GitHub comparirà il suo contenuto, senza un ulteriore livello `www`.
 
 ## Passo 1 — Collegarsi e verificare gli strumenti
 
@@ -53,34 +53,32 @@ find ~/www -name .git -print
 
 Il percorso guidato parte da un sito che non contiene già repository Git.
 Se l'ultimo comando elenca una `.git`, individua il repository esistente prima
-di procedere: non copiarlo dentro un nuovo repository come se fosse una cartella
-di normali sorgenti.
+di procedere. Se `~/www` è già un repository, riutilizzalo; non creare repository
+annidati nelle cartelle dei singoli esercizi.
 
-## Passo 2 — Preparare il progetto con tutta www
+## Passo 2 — Entrare nella cartella www e creare tmp
 
-Crea una nuova directory di lavoro:
-
-```bash
-mkdir -p ~/progetti
-mkdir ~/progetti/sito-php-studente
-```
-
-Se `sito-php-studente` esiste già, scegli un nome libero e usalo coerentemente
-nei passi successivi. Poi copia l'intera area del sito:
+Usa la cartella `www` già presente nel tuo account:
 
 ```bash
-cd ~/progetti/sito-php-studente
-mkdir www
-cp -a ~/www/. www/
-find www -type f
+cd ~/www
+pwd
+ls -la
 ```
 
-Il punto dopo `~/www/` fa copiare il contenuto, inclusi i file nascosti.
-Il risultato deve essere `sito-php-studente/www/01-hello-world/index.php`,
-senza un ulteriore livello `www/www`.
+Il percorso mostrato da `pwd` deve terminare con `/www`. Non devi creare
+una cartella di progetto né copiare il sito in un'altra posizione.
 
-Da questo momento modifica i sorgenti in `~/progetti/sito-php-studente/www`.
-La pubblicazione su Web4Student verrà aggiornata esplicitamente al passo 10.
+Crea soltanto la sottocartella per i file temporanei:
+
+```bash
+mkdir -p tmp
+ls -ld tmp
+```
+
+Useremo `tmp` per dati di prova che non devono essere versionati. Al passo 5
+creerai `.gitignore` per escluderne tutto il contenuto. Da ora lavora
+direttamente sui sorgenti in `~/www`.
 
 ## Passo 3 — Configurare l'identità Git
 
@@ -107,32 +105,30 @@ Le connessioni sono distinte:
 | Computer → Web4Student | `username`, porta 2222 |
 | Web4Student → GitHub | Utente SSH `git`, normalmente porta 22 |
 
-Controlla prima le chiavi già presenti:
+La cartella `~/.ssh` esiste già. Controlla le chiavi presenti:
 
 ```bash
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
 ls -la ~/.ssh
 ```
 
 Se non hai già una chiave adatta a GitHub e il nome scelto è libero, creala:
 
 ```bash
-ssh-keygen -t ed25519 -C "tua.email@example.com" -f ~/.ssh/w4s_github_ed25519
+ssh-keygen -t ed25519 -C "tua.email@example.com" -f ~/.ssh/w4s_github_ed25519 -N ""
 ```
 
-Scegli una passphrase e conservala. Per caricare la chiave nell'agente della
-sessione:
+L'opzione `-N ""` crea la chiave **senza passphrase**, per consentire il
+collegamento automatico a GitHub. Non sovrascrivere una chiave già utilizzata.
+
+Visualizza la chiave pubblica:
 
 ```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/w4s_github_ed25519
 cat ~/.ssh/w4s_github_ed25519.pub
 ```
 
 Il file con estensione **`.pub`** contiene la chiave pubblica da registrare su
-GitHub. La chiave privata e la passphrase restano nel tuo ambiente.
-Riferimento: [generazione della chiave e ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+GitHub. La chiave privata resta nel tuo ambiente.
+Riferimento: [generazione della chiave SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
 **Nel browser GitHub:** apri **Settings → SSH and GPG keys → New SSH key**,
 scegli una chiave di autenticazione, assegna un titolo come `Web4Student` e
@@ -147,13 +143,12 @@ Host github.com
     User git
     IdentityFile ~/.ssh/w4s_github_ed25519
     IdentitiesOnly yes
-    AddKeysToAgent yes
 ```
 
 Salva e verifica:
 
 ```bash
-chmod 600 ~/.ssh/config
+chmod 600 ~/.ssh/config ~/.ssh/w4s_github_ed25519
 ssh -T git@github.com
 ```
 
@@ -164,15 +159,15 @@ l'autenticazione riuscita; GitHub non fornisce una shell interattiva. In questo
 test il codice di uscita 1 può accompagnare l'autenticazione riuscita, come
 spiegato nella [guida al test SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection).
 
-In una nuova sessione potresti dover avviare di nuovo l'agente e usare `ssh-add`.
-Non devi generare una nuova chiave a ogni accesso.
+SSH userà direttamente la chiave indicata da `IdentityFile`, senza chiedere
+una passphrase e senza richiedere l'avvio di `ssh-agent` a ogni sessione.
 
 ## Passo 5 — Documentare il progetto e scegliere i file da tracciare
 
-Torna alla radice del progetto:
+Torna alla cartella `www`, che sarà la radice del repository:
 
 ```bash
-cd ~/progetti/sito-php-studente
+cd ~/www
 nano README.md
 ```
 
@@ -183,15 +178,23 @@ Scrivi almeno:
 
 Esercitazioni PHP di Nome Cognome, classe 3A.
 
-La cartella www contiene l'intero sito: pagine PHP, HTML, CSS e altre risorse.
-La prima attività è www/01-hello-world/index.php.
+Questo repository contiene l'intero sito: pagine PHP, HTML, CSS e altre risorse.
+La prima attività è es01a-hello-world/index.php.
 
-Su Web4Student il sito viene pubblicato nella cartella personale ~/www.
+Su Web4Student lavoro nella cartella personale ~/www, già pubblicata dal server.
+La sottocartella tmp contiene file temporanei e viene esclusa da Git.
 ```
 
-Crea poi `nano .gitignore` con:
+Crea il file `.gitignore` nella stessa cartella:
+
+```bash
+nano .gitignore
+```
+
+Inserisci queste regole; se il file esiste già, integrale con quelle presenti:
 
 ```gitignore
+/tmp/
 *.log
 *.tmp
 *.swp
@@ -202,36 +205,52 @@ Crea poi `nano .gitignore` con:
 config.local.php
 ```
 
-Questo file esclude temporanei e configurazioni locali con credenziali reali.
+La regola `/tmp/` esclude la cartella temporanea nella radice del repository
+e tutto il suo contenuto. Le altre regole escludono temporanei e configurazioni
+locali con credenziali reali.
 Gli altri sorgenti di `www`, incluse eventuali sottocartelle CSS e immagini,
 devono entrare nel repository. `.gitignore` non rimuove file già tracciati.
 
-## Passo 6 — Creare il repository locale e il primo commit
-
-Esegui questi comandi **nella radice `sito-php-studente`**, non dentro il singolo
-esercizio e non dentro la cartella pubblicata `~/www`:
+Per verificare l'esclusione, crea un file di prova nella cartella `tmp`:
 
 ```bash
+touch tmp/prova.txt
+```
+
+Lo controllerai dopo l'inizializzazione del repository.
+
+## Passo 6 — Creare il repository locale e il primo commit
+
+Esegui questi comandi **dentro `~/www`**, non nella sottocartella del singolo
+esercizio:
+
+```bash
+cd ~/www
 git init -b main
 git rev-parse --show-toplevel
-git add -- www README.md .gitignore
+git check-ignore -v tmp/prova.txt
+git add .
 git status
 git diff --cached --stat
 git diff --cached
 ```
 
-**Verifica:** la radice termina con `progetti/sito-php-studente`; nell'elenco
-dei file compaiono tutte le risorse del sito previste, non soltanto Hello World.
+**Verifica:** la radice termina con `/www`; `git check-ignore` indica la regola
+`/tmp/`. Nell'elenco dei file compaiono tutte le risorse del sito previste,
+non soltanto Hello World, mentre `tmp/prova.txt` non compare tra i file preparati
+per il commit. Il file `.gitignore` deve invece essere incluso.
 
 Se l'elenco è corretto:
 
 ```bash
 git commit -m "Importa l'intera cartella www del sito PHP"
 git log --oneline
-git ls-files -- www
+git ls-files
 ```
 
-L'ultimo comando elenca i file di `www` effettivamente tracciati.
+L'ultimo comando elenca i file del sito effettivamente tracciati. La cartella
+`tmp` resta disponibile sul server ma, essendo ignorata, non viene trasferita
+con un clone: potrai ricrearla con `mkdir -p tmp`.
 Git registra file, non cartelle vuote. Vedi i manuali di
 [git init](https://git-scm.com/docs/git-init) e [git add](https://git-scm.com/docs/git-add).
 
@@ -249,27 +268,30 @@ Questa procedura segue la [guida GitHub all'importazione di codice locale](https
 
 ## Passo 8 — Collegare il remoto e fare push
 
-Nel terminale Web4Student, dalla radice del progetto:
+Nel terminale Web4Student, dalla cartella `~/www`:
 
 ```bash
+cd ~/www
 git remote add origin git@github.com:TUO-ACCOUNT/sito-php-studente.git
 git remote -v
 git push -u origin main
 ```
 
 Aggiorna la pagina GitHub del repository. Devi vedere `README.md`, `.gitignore`
-e **`www` con tutto il sito**. Apri `www/01-hello-world/index.php` e confrontalo
-con il tuo file.
+e **tutto il contenuto versionato di `www`**, con `es01a-hello-world` direttamente
+alla radice. Apri `es01a-hello-world/index.php` e confrontalo con il tuo file.
+La cartella `tmp` e i suoi file non devono comparire.
 
 `git push` invia i commit: non invia automaticamente modifiche non ancora
-registrate e non pubblica la pagina sul server Web4Student.
+registrate. Le pagine Web4Student leggono invece i file già presenti in `~/www`,
+indipendentemente dal push.
 
 ## Passo 9 — Registrare una modifica
 
-Modifica la copia di lavoro:
+Modifica direttamente il file del sito, sempre da `~/www`:
 
 ```bash
-nano www/01-hello-world/index.php
+nano es01a-hello-world/index.php
 ```
 
 Cambia il valore del messaggio in:
@@ -281,9 +303,9 @@ $messaggio = 'Hello World sotto controllo versione con Git.';
 Poi controlla, registra e invia:
 
 ```bash
-php -l www/01-hello-world/index.php
-git diff -- www/01-hello-world/index.php
-git add -- www
+php -l es01a-hello-world/index.php
+git diff -- es01a-hello-world/index.php
+git add .
 git commit -m "Aggiorna il messaggio di Hello World"
 git push
 git log --oneline -2
@@ -291,28 +313,36 @@ git log --oneline -2
 
 **Verifica:** GitHub mostra due commit e il nuovo messaggio nel sorgente.
 
-## Passo 10 — Aggiornare la copia pubblicata
+## Passo 10 — Verificare il sito pubblicato e i file esclusi
 
-Dalla stessa directory di lavoro:
+Il file modificato si trova già nella cartella pubblicata. Non devi copiarlo
+in un'altra directory. Riapri l'URL personale:
 
-```bash
-cp -a www/. ~/www/
+```text
+https://w4s.filippobilardo.it/~username/es01a-hello-world/
 ```
 
-Riapri l'URL personale `https://w4s.filippobilardo.it/~username/01-hello-world/`.
 Ora deve comparire il nuovo messaggio.
 
-La copia trasferisce il contenuto di `www`, senza portare `.git` nella cartella
-pubblica. Aggiunge e aggiorna file; non elimina automaticamente dalla pubblicazione
-i file rimossi dal repository. In questa attività modifichiamo soltanto il messaggio.
+Controlla anche lo stato del repository e l'esclusione del file temporaneo:
+
+```bash
+git status
+git check-ignore -v tmp/prova.txt
+git ls-files -- tmp
+```
+
+L'ultimo comando non deve elencare file. `.gitignore` esclude `tmp` dal controllo
+di versione, ma non ne impedisce l'accesso via web: non usarla per conservare
+credenziali o dati riservati.
 
 ## Comandi da usare durante il lavoro
 
-| Azione | Comando dalla radice del progetto |
+| Azione | Comando da `~/www` |
 |---|---|
 | Controllare lo stato | `git status` |
 | Leggere modifiche non ancora preparate | `git diff` |
-| Preparare modifiche all'intero sito | `git add -- www` |
+| Preparare modifiche all'intero sito | `git add .` |
 | Registrare una versione | `git commit -m "Descrizione della modifica"` |
 | Inviare i commit | `git push` |
 | Leggere la cronologia | `git log --oneline` |
@@ -330,10 +360,11 @@ del sito presenti in `www`.
 
 Spiega:
 
-1. Perché il progetto Git si trova fuori dalla cartella pubblicata?
+1. Quale cartella costituisce la radice del repository e dove vengono modificati i file del sito?
 2. Che cosa cambia tra salvare un file, fare commit e fare push?
-3. Perché il solo push non aggiorna il sito Web4Student?
+3. Perché il sito mostra una modifica salvata in `~/www` anche prima del push?
 4. Quale file della coppia SSH viene registrato su GitHub?
+5. Quale regola esclude `tmp` e come puoi verificarne l'effetto?
 
 ---
 
