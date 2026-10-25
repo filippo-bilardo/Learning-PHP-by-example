@@ -306,7 +306,7 @@ e nella configurazione con il tuo nome, senza spazi.
 
 ```bash
 ls -la ~/.ssh
-ssh-keygen -t ed25519 -C "Mario Rossi - PC scuola - tua.email@example.com" -f ~/.ssh/w4s_github_mario_rossi_ed25519_pass
+ssh-keygen -t ed25519 -C "Mario Rossi - PC scuola - tua.email@example.com" -f ~/.ssh/pc_github_mario_rossi_ed25519_pass
 ```
 
 Personalizza anche il commento dopo `-C`. Non aggiungere `-N ""`: in questa
@@ -330,8 +330,8 @@ Otterrai due file:
 
 | File | Uso |
 |---|---|
-| `~/.ssh/w4s_github_mario_rossi_ed25519_pass` | Chiave privata cifrata, da mantenere nel proprio ambiente |
-| `~/.ssh/w4s_github_mario_rossi_ed25519_pass.pub` | Chiave pubblica da registrare su GitHub |
+| `~/.ssh/pc_github_mario_rossi_ed25519_pass` | Chiave privata cifrata, da mantenere nel proprio ambiente |
+| `~/.ssh/pc_github_mario_rossi_ed25519_pass.pub` | Chiave pubblica da registrare su GitHub |
 
 Il suffisso `_pass` aiuta a riconoscere la variante: la protezione dipende dalla
 passphrase impostata, non dal nome scelto.
@@ -339,7 +339,7 @@ passphrase impostata, non dal nome scelto.
 ### 3. Registrare la nuova chiave pubblica su GitHub
 
 ```bash
-cat ~/.ssh/w4s_github_mario_rossi_ed25519_pass.pub
+cat ~/.ssh/pc_github_mario_rossi_ed25519_pass.pub
 ```
 
 Copia l'intera chiave pubblica e, nel browser GitHub:
@@ -363,7 +363,7 @@ Inserisci il blocco seguente oppure sostituisci il precedente blocco
 Host github.com
     HostName github.com
     User git
-    IdentityFile ~/.ssh/w4s_github_mario_rossi_ed25519_pass
+    IdentityFile ~/.ssh/pc_github_mario_rossi_ed25519_pass
     IdentitiesOnly yes
     IdentityAgent none
 ```
@@ -384,7 +384,7 @@ ssh -T git@github.com
 Quando compare una richiesta simile alla seguente, digita la passphrase:
 
 ```text
-Enter passphrase for key '.../w4s_github_mario_rossi_ed25519_pass':
+Enter passphrase for key '.../pc_github_mario_rossi_ed25519_pass':
 ```
 
 **Verifica:** dopo lo sblocco GitHub riconosce il tuo account. Anche `git push`
