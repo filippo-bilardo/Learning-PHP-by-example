@@ -104,8 +104,8 @@ $messaggio = "Hello World dell'esercizio b.";
 </head>
 <body>
     <h1><?php echo 'Hello, World!'; ?></h1>
-    <p>Studente: <?= htmlspecialchars($nome, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></p>
-    <p><?= htmlspecialchars($messaggio, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></p>
+    <p>Studente: <?= $nome ?></p>
+    <p><?= $messaggio ?></p>
 </body>
 </html>
 ```
@@ -141,9 +141,16 @@ git config --global --get user.email
 
 Usa l'email associata all'account GitHub oppure il tuo indirizzo `noreply`
 fornito dalle impostazioni GitHub. Questi dati identificano l'autore dei commit;
-non sono credenziali di accesso.
+non sono credenziali di accesso. Sono impostazioni globali: valgono per tutti i repository Git sul server Web4Student.
 
 ## Passo 4 — Preparare l'autenticazione SSH verso GitHub
+
+**Scegli una delle due procedure alternative:** questo passo configura una
+chiave senza passphrase, utilizzabile su un PC con **account personale protetto**
+e accesso riservato ai propri file. Il **Passo 4 bis** configura invece una
+chiave con passphrase, da preferire sul PC della scuola quando altre persone
+potrebbero accedere al file della chiave privata. Dopo la procedura scelta,
+prosegui con il Passo 5.
 
 ### Perché creare una chiave SSH?
 
@@ -196,7 +203,7 @@ La cartella `~/.ssh` esiste già. Controlla le chiavi presenti:
 ls -la ~/.ssh
 ```
 
-Se non hai già una chiave adatta a GitHub e il nome scelto è libero, creala:
+Se non hai già una chiave adatta a GitHub, creala, il nome del file è libero:
 
 ```bash
 ssh-keygen -t ed25519 -C "tua.email@example.com" -f ~/.ssh/w4s_github_ed25519 -N ""
@@ -226,7 +233,7 @@ GitHub. La chiave privata resta nel tuo ambiente.
 
 **Copia l'intera chiave pubblica** (inizia con `ssh-ed25519...`) e aggiungila su GitHub:
 
-1. Vai su https://github.com/settings/keys
+1. Vai su [https://github.com/settings/keys](https://github.com/settings/keys)
 2. Clicca su "New SSH key"
 3. Dai un titolo (es: "Web4Student user")
 4. Incolla la chiave nel campo "Key"
@@ -247,6 +254,11 @@ Host github.com
 
 Salva e verifica:
 
+> SSH userà direttamente la chiave indicata da `IdentityFile`, senza chiedere
+una passphrase e senza richiedere l'avvio di `ssh-agent` a ogni sessione.
+Qui “automatico” riguarda l'autenticazione: per inviare le modifiche dovrai
+comunque creare i commit ed eseguire `git push`.
+
 ```bash
 chmod 600 ~/.ssh/config ~/.ssh/w4s_github_ed25519
 ssh -T git@github.com
@@ -259,10 +271,135 @@ l'autenticazione riuscita; GitHub non fornisce una shell interattiva. In questo
 test il codice di uscita 1 può accompagnare l'autenticazione riuscita, come
 spiegato nella [guida al test SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection).
 
-SSH userà direttamente la chiave indicata da `IdentityFile`, senza chiedere
-una passphrase e senza richiedere l'avvio di `ssh-agent` a ogni sessione.
-Qui “automatico” riguarda l'autenticazione: per inviare le modifiche dovrai
-comunque creare i commit ed eseguire `git push`.
+
+CONGRATULAZIONI! La connessione SSH tra Web4Student e GitHub funziona.
+Se hai scelto questa procedura, puoi proseguire direttamente con il Passo 5.
+
+## Passo 4 bis — Creare una chiave con passphrase per il PC della scuola
+
+Questa procedura è **alternativa al Passo 4**, non un secondo collegamento
+obbligatorio. Usala quando lavori su un PC della scuola o in un ambiente in cui
+altri potrebbero vedere o copiare i file del tuo account.
+
+### Perché proteggere la chiave con una password?
+
+La chiave privata permette di autenticarsi su GitHub. Se non ha una passphrase,
+chi ne ottiene una copia può usarla senza dover sbloccare il file. La passphrase
+cifra invece la chiave privata salvata: per utilizzarla serve anche conoscere
+questa password. Scegli una frase lunga, difficile da indovinare e personale.
+
+La passphrase non è la password di GitHub o di Web4Student: serve a sbloccare
+**localmente il file della chiave privata**. Il nome del file e la chiave pubblica
+possono essere conosciuti da altri; è la chiave privata che deve restare riservata.
+Vedi la [guida GitHub alle passphrase SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases).
+
+### 1. Scegliere il terminale e un nome riconoscibile
+
+Esegui i comandi nell'ambiente che userà Git:
+
+- Se Git viene eseguito sul PC della scuola, usa il suo terminale, per esempio Git Bash su Windows: la chiave resterà nella sua cartella `~/.ssh`.
+- Se Git viene eseguito nella sessione SSH Web4Student, usa quel terminale: la chiave resterà su Web4Student. Collegarsi dal PC della scuola non trasferisce automaticamente la chiave sul PC.
+
+Nel nome della nuova chiave inserisci **il tuo nome e cognome** e il suffisso
+**`_pass`**. Nell'esempio usiamo `mario_rossi`: sostituiscilo in tutti i comandi
+e nella configurazione con il tuo nome, senza spazi.
+
+```bash
+ls -la ~/.ssh
+ssh-keygen -t ed25519 -C "Mario Rossi - PC scuola - tua.email@example.com" -f ~/.ssh/w4s_github_mario_rossi_ed25519_pass
+```
+
+Personalizza anche il commento dopo `-C`. Non aggiungere `-N ""`: in questa
+procedura devi impostare una passphrase non vuota. Se il nome del file è già
+occupato, scegli un nome diverso senza sovrascrivere una chiave esistente.
+
+### 2. Inserire e confermare la passphrase
+
+Il programma chiede:
+
+```text
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+```
+
+Digita la passphrase alla prima richiesta e ripetila alla seconda. I caratteri
+digitati non vengono mostrati nel terminale. Non scriverla nel comando, nel
+README o nel repository.
+
+Otterrai due file:
+
+| File | Uso |
+|---|---|
+| `~/.ssh/w4s_github_mario_rossi_ed25519_pass` | Chiave privata cifrata, da mantenere nel proprio ambiente |
+| `~/.ssh/w4s_github_mario_rossi_ed25519_pass.pub` | Chiave pubblica da registrare su GitHub |
+
+Il suffisso `_pass` aiuta a riconoscere la variante: la protezione dipende dalla
+passphrase impostata, non dal nome scelto.
+
+### 3. Registrare la nuova chiave pubblica su GitHub
+
+```bash
+cat ~/.ssh/w4s_github_mario_rossi_ed25519_pass.pub
+```
+
+Copia l'intera chiave pubblica e, nel browser GitHub:
+
+1. Apri **Settings → SSH and GPG keys → New SSH key**.
+2. Scegli il tipo **Authentication Key**.
+3. Usa un titolo riconoscibile, per esempio `Mario Rossi - PC scuola - pass`.
+4. Incolla la chiave pubblica nel campo **Key** e conferma con **Add SSH key**.
+
+Se hai creato questa nuova coppia, devi registrare la sua chiave pubblica:
+quella della variante senza passphrase appartiene a una coppia diversa.
+
+### 4. Configurare SSH per usare la chiave protetta
+
+Apri `~/.ssh/config` con un editor: puoi usare `nano ~/.ssh/config` nel terminale
+oppure Blocco note su Windows, salvando il file come `config`, senza `.txt`.
+Inserisci il blocco seguente oppure sostituisci il precedente blocco
+`Host github.com`, così la connessione usa la chiave protetta:
+
+```sshconfig
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/w4s_github_mario_rossi_ed25519_pass
+    IdentitiesOnly yes
+    IdentityAgent none
+```
+
+`IdentityFile` seleziona la chiave con il tuo nome e `_pass`. Per questa prova
+su un PC condiviso, `IdentityAgent none` evita di usare chiavi già sbloccate
+in un agente SSH: la passphrase verrà richiesta quando usi il file.
+L'opzione è descritta nel [manuale OpenSSH](https://man.openbsd.org/ssh_config#IdentityAgent).
+
+### 5. Verificare la connessione
+
+Nel terminale dell'ambiente in cui hai configurato la chiave, esegui:
+
+```bash
+ssh -T git@github.com
+```
+
+Quando compare una richiesta simile alla seguente, digita la passphrase:
+
+```text
+Enter passphrase for key '.../w4s_github_mario_rossi_ed25519_pass':
+```
+
+**Verifica:** dopo lo sblocco GitHub riconosce il tuo account. Anche `git push`
+e `git pull` tramite SSH richiederanno lo sblocco della chiave con questa
+configurazione. Ora puoi continuare dal Passo 5.
+
+### Quale alternativa usare?
+
+| Situazione | Procedura |
+|---|---|
+| PC con account personale protetto e file accessibili soltanto al proprietario | Passo 4: chiave senza passphrase, per il collegamento automatico |
+| PC della scuola o ambiente in cui altri potrebbero accedere al file privato | Passo 4 bis: chiave con nome personale, suffisso `_pass` e passphrase |
+
+La passphrase protegge il file salvato, non una sessione già accessibile ad
+altre persone: al termine del lavoro chiudi le sessioni ed esci dal tuo account.
 
 ## Passo 5 — Documentare il progetto e scegliere i file da tracciare
 
@@ -361,10 +498,10 @@ Git registra file, non cartelle vuote. Vedi i manuali di
 
 **Dove:** browser, nel tuo account GitHub.
 
-1. Crea un nuovo repository chiamato `sito-php-studente`.
+1. Crea un nuovo repository chiamato `siti-php-nomestudente`.
 2. Scegli la visibilità secondo le indicazioni del corso.
 3. Non aggiungere da GitHub README, `.gitignore` o licenza: il repository remoto deve partire vuoto.
-4. Copia l'URL SSH, nella forma `git@github.com:TUO-ACCOUNT/sito-php-studente.git`.
+4. Copia l'URL SSH, nella forma `git@github.com:TUO-ACCOUNT/siti-php-nomestudente.git`.
 
 `TUO-ACCOUNT` è l'account GitHub, che può essere diverso dallo username Web4Student.
 Questa procedura segue la [guida GitHub all'importazione di codice locale](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github).
@@ -375,7 +512,7 @@ Nel terminale Web4Student, dalla cartella `~/www`:
 
 ```bash
 cd ~/www
-git remote add origin git@github.com:TUO-ACCOUNT/sito-php-studente.git
+git remote add origin git@github.com:TUO-ACCOUNT/siti-php-nomestudente.git
 git remote -v
 git push -u origin main
 ```
@@ -389,6 +526,8 @@ La cartella `tmp` e i suoi file non devono comparire.
 `git push` invia i commit: non invia automaticamente modifiche non ancora
 registrate. Le pagine Web4Student leggono invece i file già presenti in `~/www`,
 indipendentemente dal push.
+
+CONGRATULAZIONI! Hai completato l'importazione del sito su GitHub e puoi passare al passo successivo.
 
 ## Passo 9 — Registrare una modifica
 
@@ -416,6 +555,8 @@ git log --oneline -2
 ```
 
 **Verifica:** GitHub mostra due commit e il nuovo messaggio nel sorgente.
+
+CONGRATULAZIONI! Hai completato la modifica e il push su GitHub. Puoi passare al passo successivo.
 
 ## Passo 10 — Verificare il sito pubblicato e i file esclusi
 

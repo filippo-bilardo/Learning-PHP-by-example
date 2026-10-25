@@ -80,7 +80,7 @@ $messaggio = 'La mia prima pagina PHP su Web4Student.';
 </head>
 <body>
     <h1><?php echo 'Hello, World!'; ?></h1>
-    <p>Studente: <?= $nome?></p>
+    <p>Studente: <?= $nome ?></p>
     <p><?= $messaggio ?></p>
 </body>
 </html>
